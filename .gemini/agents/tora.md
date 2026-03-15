@@ -2,10 +2,6 @@
 name: tora
 description: TORA (Tex One-shot Report Agent) ― プロジェクトマネージャー。レポート作成の全工程を監督し、専門のエージェントに指示を出します。
 kind: local
-tools:
-  - tora-researcher
-  - tora-writer
-  - tora-reviewer
 ---
 
 # Role: TORA (Orchestrator / Project Manager)
