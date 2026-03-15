@@ -33,7 +33,7 @@ case "$COMMAND" in
                 echo "✅ $TARGET_DIR/$AGENT を配置しました。"
             else
                 echo "❌ $AGENT が見つかりません。GitHub からの取得を試みます..."
-                AGENT_URL="https://raw.githubusercontent.com/[あなたのユーザー名]/tora/main/.gemini/agents/$AGENT"
+                AGENT_URL="https://raw.githubusercontent.com/TEIKOTA/tora/main/.gemini/agents/$AGENT"
                 curl -sSL "$AGENT_URL" -o "$TARGET_DIR/$AGENT"
                 echo "✅ $TARGET_DIR/$AGENT を GitHub から取得しました。"
             fi

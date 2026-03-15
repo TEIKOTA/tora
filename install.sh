@@ -26,9 +26,8 @@ mkdir -p .gemini/agents
 AGENTS=("tora.md" "tora-researcher.md" "tora-writer.md" "tora-reviewer.md")
 
 # 各エージェント定義ファイルの取得
-# ※ GitHub公開後は、[あなたのユーザー名] を実際のユーザー名に書き換えてください。
 for AGENT in "${AGENTS[@]}"; do
-    AGENT_URL="https://raw.githubusercontent.com/[あなたのユーザー名]/tora/main/.gemini/agents/$AGENT"
+    AGENT_URL="https://raw.githubusercontent.com/TEIKOTA/tora/main/.gemini/agents/$AGENT"
     echo "Downloading $AGENT..."
     if command -v curl >/dev/null 2>&1; then
         curl -sSL "$AGENT_URL" -o ".gemini/agents/$AGENT"
