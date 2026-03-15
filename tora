@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# ==========================================================
+# TORA (Tex One-shot Report Agent) - AI-powered Report Accelerator
+# ==========================================================
+# 使い方: tora init
+
+set -e
+
+COMMAND="$1"
+TARGET_DIR=".gemini/agents"
+# エージェントリスト
+AGENTS=("tora.md" "tora-researcher.md" "tora-writer.md" "tora-reviewer.md")
+
+# エージェントファイルのソースパス
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+case "$COMMAND" in
+    "init")
+        echo "🐯 TORA (Tex One-shot Report Agent) を初期化しています..."
+        mkdir -p "$TARGET_DIR"
+        
+        for AGENT in "${AGENTS[@]}"; do
+            # ローカル開発パス
+            SOURCE_PATH="$SCRIPT_DIR/.gemini/agents/$AGENT"
+            # Homebrew パス
+            if [ ! -f "$SOURCE_PATH" ]; then
+                SOURCE_PATH="$SCRIPT_DIR/../share/tora/.gemini/agents/$AGENT"
+            fi
+
+            if [ -f "$SOURCE_PATH" ]; then
+                cp "$SOURCE_PATH" "$TARGET_DIR/"
+                echo "✅ $TARGET_DIR/$AGENT を配置しました。"
+            else
+                echo "❌ $AGENT が見つかりません。GitHub からの取得を試みます..."
+                AGENT_URL="https://raw.githubusercontent.com/[あなたのユーザー名]/tora/main/.gemini/agents/$AGENT"
+                curl -sSL "$AGENT_URL" -o "$TARGET_DIR/$AGENT"
+                echo "✅ $TARGET_DIR/$AGENT を GitHub から取得しました。"
+            fi
+        done
+
+        echo "🚀 準備が整いました。Gemini CLI を起動します..."
+        echo "----------------------------------------------------------"
+        # Gemini CLI を起動
+        if command -v gemini >/dev/null 2>&1; then
+            exec gemini
+        else
+            echo "❌ Gemini CLI (gemini) が見つかりません。"
+            echo "   以下のサイトを参考に Gemini CLI をインストールしてください："
+            echo "   https://geminicli.com/docs/get-started/installation/"
+            echo ""
+            read -p "👉 [Press Enter] を押してブラウザでインストールガイドを開きます..." 
+
+            # OS に応じてブラウザを開く
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+                open "https://geminicli.com/docs/get-started/installation/"
+            elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+                xdg-open "https://geminicli.com/docs/get-started/installation/"
+            fi
+            
+            echo "----------------------------------------------------------"
+            echo "インストール完了後、再度 'tora init' を実行してください。"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Usage: tora init"
+        echo "生成AIを使って虎のごとく爆速でレポートを生成するためのツールです。"
+        ;;
+esac
