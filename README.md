@@ -19,7 +19,46 @@
   - 検証時には **NotebookLM (https://notebooklm.google.com/)** を自動で開くことができます。
 
 ## 🚀 インストール & 使い方
+### 0. .latexmkrcの設定
+以下の``.latexmkrc``ファイルを``Users/${ユーザー名}``(ホームディレクトリ)に配置
+```.latexmkrc
+#!/usr/bin/env perl
+# LuaLaTeX を直接 PDF 出力モード (4) で使用する
+$pdf_mode = 4;
+$postscript_mode = $dvi_mode = 0;
 
+# LuaLaTeX コマンドの設定
+$lualatex = 'lualatex -synctex=1 -interaction=nonstopmode -halt-on-error -file-line-error %O %S';
+
+# 補助ファイルは out ディレクトリへ
+$aux_dir = 'out';
+
+# PDF は現在のディレクトリ（texと同じ場所）へ
+$out_dir = '.';
+
+# リピート回数の上限
+$max_repeat = 15;
+
+# BibTeX (upbibtex または biber を使用)
+$bibtex = 'upbibtex %O %S';
+$biber = 'biber --bblencoding=utf8 -u -U --output_safechars %O %S';
+
+# 索引 (upmendex が現代的)
+$makeindex = 'upmendex %O -o %D %S';
+
+# プレビュー設定 (OS 判定はそのまま)
+$pvc_view_file_via_temporary = 0;
+if ($^O eq 'linux') {
+    $pdf_previewer = "xdg-open %S";
+} elsif ($^O eq 'darwin') {
+    $pdf_previewer = "open %S";
+} else {
+    $pdf_previewer = "start %S";
+}
+
+# クリーンアップ対象の拡張子追加
+$clean_full_ext = "%R.synctex.gz %R.run.xml %R.bcf"
+```
 ### 1. Homebrew でインストール（推奨）
 Mac ユーザーの方は、Homebrew を使って簡単にインストール・管理が可能です。
 
